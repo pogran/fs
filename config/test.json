@@ -1,0 +1,4 @@
+{
+	"root" : "./sandbox/fs-root",
+	"testDataFolder" : "./sandbox/data"
+}
