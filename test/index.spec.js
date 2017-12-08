@@ -12,10 +12,7 @@ describe('App', function() {
     it('responds with status 200', function(done) {
 			request
         .get('/')
-        .end(function(err, res) {
-          expect(res).to.have.status(200);
-          done();
-        });
+				.expect(200, done)
     });
 	});
 })

@@ -20,7 +20,7 @@ const deleteFolder = (path) => {
 	})
 }
 
-describe.only('Fs', () => {
+describe('Fs', () => {
 	describe('GET /fs/', () => {
 		it('response status = 200', done => {
 			request
@@ -181,8 +181,9 @@ describe.only('Fs', () => {
 		it('response status = 200', done => {
 			request
 				.post('/upload')
+				.expect('Content-Type', /json/)
 				.expect(200, done)
-		});
+		})
 
 		it('invalid param file', done => {
 			request
@@ -237,6 +238,109 @@ describe.only('Fs', () => {
 					const result = JSON.parse(res.text)
 					expect(result.success).to.eql(false)
 					expect(result).to.have.property('error')
+					done()
+				})
+				.catch(err => done(err))
+		})
+	})
+
+	describe('GET /fs/download', () => {
+		it('response status = 200', done => {
+			request
+				.get('/download')
+				.expect(200, done)
+		})
+
+		it('without param file', done => {
+			request
+				.get('/download')
+				.then(res => {
+					const result = JSON.parse(res.text)
+					expect(result.success).to.eql(false)
+					expect(result).to.have.property('error')
+					expect(result.error).to.eql('Param "File" is required')
+					done()
+				})
+				.catch(err => done(err))
+		})
+
+		it('without param file', done => {
+			request
+				.get('/download')
+				.then(res => {
+					const result = JSON.parse(res.text)
+					expect(result.success).to.eql(false)
+					expect(result).to.have.property('error')
+					expect(result.error).to.eql('Param "File" is required')
+					done()
+				})
+				.catch(err => done(err))
+		})
+
+		it('invalid param file', done => {
+			request
+				.get('/download')
+				.query({file: `${config.root}/t.txt`})
+				.then(res => {
+					const result = JSON.parse(res.text)
+					expect(result.success).to.eql(false)
+					expect(result).to.have.property('error')
+					done()
+				})
+				.catch(err => done(err))
+		})
+
+		it('valid param file', done => {
+			request
+				.get('/download')
+				.query({file: `${config.root}/test.txt`})
+				.then(res => {
+					expect(res.text).to.eql('Test file')
+					done()
+				})
+				.catch(err => done(err))
+		})
+	})
+
+	describe('GET /fs/view', () => {
+		it('response status = 200', done => {
+			request
+				.get('/view')
+				.expect(200, done)
+		})
+
+		it('invalid param file', done => {
+			request
+				.get('/view')
+				.query({file: `${config.root}/t.txt`})
+				.then(res => {
+					const result = JSON.parse(res.text)
+					expect(result.success).to.eql(false)
+					expect(result).to.have.property('error')
+					done()
+				})
+				.catch(err => done(err))
+		})
+
+		it('without param file', done => {
+			request
+				.get('/view')
+				.then(res => {
+					const result = JSON.parse(res.text)
+					expect(result.success).to.eql(false)
+					expect(result).to.have.property('error')
+					expect(result.error).to.eql('Param "File" is required')
+					done()
+				})
+				.catch(err => done(err))
+		})
+
+		it('valid param file', done => {
+			request
+				.get('/view')
+				.query({file: `${config.root}/test.txt`})
+				.then(res => {
+					expect(res.text).to.eql('Test file')
 					done()
 				})
 				.catch(err => done(err))
